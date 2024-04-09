@@ -35,7 +35,7 @@ public class ProdutoController {
 
 	@GetMapping("/produto/{produtoIdentifier}")
 	public ProdutoDTO findById(@PathVariable String produtoIdentifier) {
-		return produtoService.findByProductIdentifier(produtoIdentifier);
+		return produtoService.findByProdutoIdentifier(produtoIdentifier);
 	}
 
 	@PostMapping("/produto")

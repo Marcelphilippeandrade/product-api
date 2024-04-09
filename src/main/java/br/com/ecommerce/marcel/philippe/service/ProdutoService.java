@@ -27,7 +27,7 @@ public class ProdutoService {
 		return produtos.stream().map(ProdutoDTO::convert).collect(Collectors.toList());
 	}
 
-	public ProdutoDTO findByProductIdentifier(String productIdentifier) {
+	public ProdutoDTO findByProdutoIdentifier(String productIdentifier) {
 		Produto produto = produtoRepository.findByProdutoIdentifier(productIdentifier);
 		if (produto != null) {
 			return ProdutoDTO.convert(produto);
@@ -44,6 +44,7 @@ public class ProdutoService {
 		Optional<Produto> produto = produtoRepository.findById(produtoId);
 		if (produto.isPresent()) {
 			produtoRepository.delete(produto.get());
+			return ProdutoDTO.convert(produto.get());
 		}
 		throw new ProdutoNotFoundException();
 	}
