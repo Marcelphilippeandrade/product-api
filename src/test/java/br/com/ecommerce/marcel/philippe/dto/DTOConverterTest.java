@@ -62,7 +62,7 @@ public class DTOConverterTest {
 
         assertNotNull(produtoDto);
         assertEquals(NOME_PRODUTO, produtoDto.getNome());
-        assertEquals(Float.valueOf(1500.0F), produtoDto.getPreco());
+        assertEquals(Float.valueOf(PRECO_PRODUTO2), produtoDto.getPreco());
         assertNull(produtoDto.getCategoria());
     }
 }
