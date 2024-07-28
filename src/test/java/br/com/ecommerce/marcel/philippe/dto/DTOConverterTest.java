@@ -31,7 +31,7 @@ public class DTOConverterTest {
     }
 
     @Test
-    void deveConvertProdutoParaProdutoDto() {
+    void deveConverterProdutoParaProdutoDto() {
         Categoria categoria = new Categoria();
         categoria.setId(ID_CATEGORIA2);
         categoria.setNome(NOME_CATEGORIA2);
@@ -52,7 +52,7 @@ public class DTOConverterTest {
     }
 
     @Test
-    void testConvertProdutoSemCategoria() {
+    void deveConverterProdutoSemCategoria() {
         Produto produto = new Produto();
         produto.setNome(NOME_PRODUTO);
         produto.setPreco(PRECO_PRODUTO2);
