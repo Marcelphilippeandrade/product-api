@@ -9,7 +9,7 @@ import br.com.ecommerce.marcel.philippe.modelo.Produto;
 
 public class DTOConverterTest {
 	
-	private static final float PRECO_PRECO = 3000.0F;
+	private static final float PRECO_PRODUTO2 = 1500.0F;
 	private static final float PRECO_PRODUTO = 3000.0F;
 	private static final long ID_CATEGORIA2 = 2L;
 	private static final long ID_CATEGORIA = 1L;
@@ -45,7 +45,7 @@ public class DTOConverterTest {
 
         assertNotNull(produtoDto);
         assertEquals(NOME_PRODUTO, produtoDto.getNome());
-        assertEquals(Float.valueOf(PRECO_PRECO), produtoDto.getPreco());
+        assertEquals(Float.valueOf(PRECO_PRODUTO), produtoDto.getPreco());
         assertNotNull(produtoDto.getCategoria());
         assertEquals(Long.valueOf(ID_CATEGORIA2), produtoDto.getCategoria().getId());
         assertEquals(NOME_CATEGORIA2, produtoDto.getCategoria().getNome());
@@ -55,14 +55,14 @@ public class DTOConverterTest {
     void testConvertProdutoSemCategoria() {
         Produto produto = new Produto();
         produto.setNome(NOME_PRODUTO);
-        produto.setPreco(1500.0F);
+        produto.setPreco(PRECO_PRODUTO2);
         produto.setCategoria(null);
 
         ProdutoDTO produtoDto = DTOConverter.convert(produto);
 
         assertNotNull(produtoDto);
         assertEquals(NOME_PRODUTO, produtoDto.getNome());
-        assertEquals(Float.valueOf(1500.0F), produtoDto.getPreco());
+        assertEquals(Float.valueOf(PRECO_PRODUTO2), produtoDto.getPreco());
         assertNull(produtoDto.getCategoria());
     }
 }
