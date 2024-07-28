@@ -9,51 +9,59 @@ import br.com.ecommerce.marcel.philippe.modelo.Produto;
 
 public class DTOConverterTest {
 	
+	private static final float PRECO_PRECO = 3000.0F;
+	private static final float PRECO_PRODUTO = 3000.0F;
+	private static final long ID_CATEGORIA2 = 2L;
+	private static final long ID_CATEGORIA = 1L;
+	private static final String NOME_PRODUTO = "Notebook";
+	private static final String NOME_CATEGORIA2 = "Informática";
+	private static final String NOME_CATEGORIA = "Eletrônicos";
+
 	@Test
     void testConvertCategoria() {
         Categoria categoria = new Categoria();
-        categoria.setId(1L);
-        categoria.setNome("Eletrônicos");
+        categoria.setId(ID_CATEGORIA);
+        categoria.setNome(NOME_CATEGORIA);
 
         CategoriaDTO categoriaDto = DTOConverter.convert(categoria);
 
         assertNotNull(categoriaDto);
-        assertEquals(Long.valueOf(1L), categoriaDto.getId());
-        assertEquals("Eletrônicos", categoriaDto.getNome());
+        assertEquals(Long.valueOf(ID_CATEGORIA), categoriaDto.getId());
+        assertEquals(NOME_CATEGORIA, categoriaDto.getNome());
     }
 
     @Test
     void testConvertProduto() {
         Categoria categoria = new Categoria();
-        categoria.setId(2L);
-        categoria.setNome("Informática");
+        categoria.setId(ID_CATEGORIA2);
+        categoria.setNome(NOME_CATEGORIA2);
 
         Produto produto = new Produto();
-        produto.setNome("Notebook");
-        produto.setPreco(3000.0F);
+        produto.setNome(NOME_PRODUTO);
+        produto.setPreco(PRECO_PRODUTO);
         produto.setCategoria(categoria);
 
         ProdutoDTO produtoDto = DTOConverter.convert(produto);
 
         assertNotNull(produtoDto);
-        assertEquals("Notebook", produtoDto.getNome());
-        assertEquals(Float.valueOf(3000.0F), produtoDto.getPreco());
+        assertEquals(NOME_PRODUTO, produtoDto.getNome());
+        assertEquals(Float.valueOf(PRECO_PRECO), produtoDto.getPreco());
         assertNotNull(produtoDto.getCategoria());
-        assertEquals(Long.valueOf(2L), produtoDto.getCategoria().getId());
-        assertEquals("Informática", produtoDto.getCategoria().getNome());
+        assertEquals(Long.valueOf(ID_CATEGORIA2), produtoDto.getCategoria().getId());
+        assertEquals(NOME_CATEGORIA2, produtoDto.getCategoria().getNome());
     }
 
     @Test
     void testConvertProdutoSemCategoria() {
         Produto produto = new Produto();
-        produto.setNome("Smartphone");
+        produto.setNome(NOME_PRODUTO);
         produto.setPreco(1500.0F);
         produto.setCategoria(null);
 
         ProdutoDTO produtoDto = DTOConverter.convert(produto);
 
         assertNotNull(produtoDto);
-        assertEquals("Smartphone", produtoDto.getNome());
+        assertEquals(NOME_PRODUTO, produtoDto.getNome());
         assertEquals(Float.valueOf(1500.0F), produtoDto.getPreco());
         assertNull(produtoDto.getCategoria());
     }
