@@ -18,7 +18,7 @@ public class DTOConverterTest {
 	private static final String NOME_CATEGORIA = "Eletrônicos";
 
 	@Test
-    void testConvertCategoria() {
+    void deveConveterCategoriaParaCategoriaDto() {
         Categoria categoria = new Categoria();
         categoria.setId(ID_CATEGORIA);
         categoria.setNome(NOME_CATEGORIA);
@@ -31,7 +31,7 @@ public class DTOConverterTest {
     }
 
     @Test
-    void testConvertProduto() {
+    void deveConvertProdutoParaProdutoDto() {
         Categoria categoria = new Categoria();
         categoria.setId(ID_CATEGORIA2);
         categoria.setNome(NOME_CATEGORIA2);
