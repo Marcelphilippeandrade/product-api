@@ -1,10 +1,10 @@
 package br.com.ecommerce.marcel.philippe.service;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +35,10 @@ class ProdutoServiceTest {
 
 	@Autowired
 	private ProdutoService produtoService;
+	
+	private Produto produto1;
+	
+	private Produto produto2;
 
 	private static final String DESCRICAO = "Tv 50 polegadas";
 	private static final String IDENTIFICACAO_PRODUTO = "tv";
@@ -50,14 +54,14 @@ class ProdutoServiceTest {
 	@BeforeEach
 	public void setUp() {
 		List<Produto> produtos = new ArrayList<>();
-		Produto produto1 = new Produto();
+		produto1 = new Produto();
 		produto1.setId(PRODUTO_ID);
 		produto1.setNome(NOME_PRODUTO);
 		produto1.setPreco(PRECO_PRODUTO);
 		produto1.setProdutoIdentifier(IDENTIFICACAO_PRODUTO);
 		produto1.setDescricao(DESCRICAO);
 
-		Produto produto2 = new Produto();
+		produto2 = new Produto();
 		produto1.setId(PRODUTO_ID);
 		produto1.setNome(NOME_PRODUTO);
 		produto1.setPreco(PRECO_PRODUTO);
@@ -102,9 +106,11 @@ class ProdutoServiceTest {
 	}
 
 	@Test
-	public void naoDeveRetornarUmProdutoPeloIdentificador() {
-		ProdutoDTO produto = this.produtoService.findByProdutoIdentifier(IDENTIFICADOR_QUALQUER);
-		assertNull(produto);
+	public void deveRetornarUmaExecaoQuandoNaoExitirUmProduto() {
+		when(produtoRepository.findByProdutoIdentifier(IDENTIFICADOR_QUALQUER)).thenReturn(null);
+		assertThrows(ProdutoNotFoundException.class, () -> {
+			produtoService.findByProdutoIdentifier(IDENTIFICADOR_QUALQUER);
+		});
 	}
 
 	@Test
@@ -130,7 +136,22 @@ class ProdutoServiceTest {
 		ProdutoDTO produtoDeletado = produtoService.delete(PRODUTO_ID);
 		assertEquals(NOME_PRODUTO, produtoDeletado.getNome());
 	}
+	
+	@Test
+	public void deveRetornarUmprodutoPeloId() {
+		when(produtoRepository.findById(PRODUTO_ID)).thenReturn(Optional.of(produto1));
+		ProdutoDTO produtoDTO = produtoService.findById(PRODUTO_ID);
+		assertEquals(NOME_PRODUTO, produtoDTO.getNome());
+	}
 
+	@Test
+	public void deveRetornarUmaExecaoQuandoNaoExitirUmProdutoParaDeletar() {
+		when(produtoRepository.findById(PRODUTO_ID)).thenReturn(Optional.empty());
+		assertThrows(ProdutoNotFoundException.class, () -> {
+			produtoService.findById(PRODUTO_ID);
+		});
+	}
+	
 	@Test
 	public void naoDeveRetornarUmProdutoPeloId() {
 		assertThrows(ProdutoNotFoundException.class, () -> {
