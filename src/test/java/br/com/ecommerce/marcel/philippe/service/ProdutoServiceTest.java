@@ -106,7 +106,7 @@ class ProdutoServiceTest {
 	}
 
 	@Test
-	public void deveRetornarUmaExecaoQuandoNaoExitirUmProduto() {
+	public void deveRetornarUmaExcecaoQuandoNaoExitirUmProduto() {
 		when(produtoRepository.findByProdutoIdentifier(IDENTIFICADOR_QUALQUER)).thenReturn(null);
 		assertThrows(ProdutoNotFoundException.class, () -> {
 			produtoService.findByProdutoIdentifier(IDENTIFICADOR_QUALQUER);
@@ -145,7 +145,7 @@ class ProdutoServiceTest {
 	}
 
 	@Test
-	public void deveRetornarUmaExecaoQuandoNaoExitirUmProdutoParaDeletar() {
+	public void deveRetornarUmaExcecaoQuandoNaoExitirUmProdutoParaDeletar() {
 		when(produtoRepository.findById(PRODUTO_ID)).thenReturn(Optional.empty());
 		assertThrows(ProdutoNotFoundException.class, () -> {
 			produtoService.findById(PRODUTO_ID);
