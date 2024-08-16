@@ -32,7 +32,15 @@ public class ProdutoService {
 		if (produto != null) {
 			return ProdutoDTO.convert(produto);
 		}
-		return null;
+		throw new ProdutoNotFoundException();
+	}
+	
+	public ProdutoDTO findById(long id) {
+		Optional<Produto> produto = produtoRepository.findById(id);
+		if (produto.isPresent()) {
+			return ProdutoDTO.convert(produto.get());
+		}
+		throw new ProdutoNotFoundException();
 	}
 
 	public ProdutoDTO save(ProdutoDTO productDTO) {
