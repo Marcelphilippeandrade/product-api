@@ -7,8 +7,10 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import br.com.ecommerce.marcel.philippe.dto.ProdutoDTO;
+import br.com.ecommerce.marcel.philippe.exception.CategoriaNotFoundException;
 import br.com.ecommerce.marcel.philippe.exception.ProdutoNotFoundException;
 import br.com.ecommerce.marcel.philippe.modelo.Produto;
+import br.com.ecommerce.marcel.philippe.repository.CategoriaRepository;
 import br.com.ecommerce.marcel.philippe.repository.ProdutoRepository;
 
 @Service
@@ -16,6 +18,9 @@ public class ProdutoService {
 
 	@Autowired
 	private ProdutoRepository produtoRepository;
+	
+	@Autowired
+	private CategoriaRepository categoriaRepository;
 
 	public List<ProdutoDTO> getAll() {
 		List<Produto> produtos = produtoRepository.findAll();
@@ -44,6 +49,13 @@ public class ProdutoService {
 	}
 
 	public ProdutoDTO save(ProdutoDTO productDTO) {
+
+		Boolean existeCategoria = categoriaRepository.existsById(productDTO.getCategoria().getId());
+
+		if (!existeCategoria) {
+			throw new CategoriaNotFoundException();
+		}
+
 		Produto produto = produtoRepository.save(Produto.convert(productDTO));
 		return ProdutoDTO.convert(produto);
 	}
