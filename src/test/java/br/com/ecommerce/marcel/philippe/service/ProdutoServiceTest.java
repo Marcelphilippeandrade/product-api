@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -21,9 +22,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import br.com.ecommerce.marcel.philippe.dto.CategoriaDTO;
 import br.com.ecommerce.marcel.philippe.dto.ProdutoDTO;
+import br.com.ecommerce.marcel.philippe.exception.CategoriaNotFoundException;
 import br.com.ecommerce.marcel.philippe.exception.ProdutoNotFoundException;
 import br.com.ecommerce.marcel.philippe.modelo.Categoria;
 import br.com.ecommerce.marcel.philippe.modelo.Produto;
+import br.com.ecommerce.marcel.philippe.repository.CategoriaRepository;
 import br.com.ecommerce.marcel.philippe.repository.ProdutoRepository;
 
 @RunWith(SpringRunner.class)
@@ -33,11 +36,14 @@ class ProdutoServiceTest {
 	@MockBean
 	private ProdutoRepository produtoRepository;
 
+	@MockBean
+	private CategoriaRepository categoriaRepository;
+
 	@Autowired
 	private ProdutoService produtoService;
-	
+
 	private Produto produto1;
-	
+
 	private Produto produto2;
 
 	private static final String DESCRICAO = "Tv 50 polegadas";
@@ -106,7 +112,7 @@ class ProdutoServiceTest {
 	}
 
 	@Test
-	public void deveRetornarUmaExcecaoQuandoNaoExitirUmProduto() {
+	public void deveRetornarUmaExcecaoQuandoNaoExistirUmProduto() {
 		when(produtoRepository.findByProdutoIdentifier(IDENTIFICADOR_QUALQUER)).thenReturn(null);
 		assertThrows(ProdutoNotFoundException.class, () -> {
 			produtoService.findByProdutoIdentifier(IDENTIFICADOR_QUALQUER);
@@ -115,15 +121,11 @@ class ProdutoServiceTest {
 
 	@Test
 	public void deveSalvarUmProduto() {
-		ProdutoDTO productDTO = new ProdutoDTO();
-		productDTO.setNome(NOME_PRODUTO);
-		productDTO.setDescricao(DESCRICAO);
-		productDTO.setPreco(PRECO_PRODUTO);
-		productDTO.setProdutoIdentifier(IDENTIFICACAO_PRODUTO);
+		when(categoriaRepository.existsById(anyLong())).thenReturn(true);
 
-		CategoriaDTO categoriaDTO = new CategoriaDTO();
-		categoriaDTO.setId(CATEGORIA_ID);
-		categoriaDTO.setNome(NOME_CATEGORIA);
+		ProdutoDTO productDTO = retornaProdutoDTO();
+
+		CategoriaDTO categoriaDTO = retornaCategoriaDTO();
 
 		productDTO.setCategoria(categoriaDTO);
 
@@ -132,11 +134,24 @@ class ProdutoServiceTest {
 	}
 
 	@Test
+	public void deveRetonarUmaExcecaoQuandoNaoExistirACategoriaCadastrada() {
+		when(categoriaRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+		ProdutoDTO productDTO = retornaProdutoDTO();
+
+		productDTO.setCategoria(retornaCategoriaDTO());
+
+		assertThrows(CategoriaNotFoundException.class, () -> {
+			produtoService.save(productDTO);
+		});
+	}
+
+	@Test
 	public void deveDeletarUmProdutoPeloId() {
 		ProdutoDTO produtoDeletado = produtoService.delete(PRODUTO_ID);
 		assertEquals(NOME_PRODUTO, produtoDeletado.getNome());
 	}
-	
+
 	@Test
 	public void deveRetornarUmprodutoPeloId() {
 		when(produtoRepository.findById(PRODUTO_ID)).thenReturn(Optional.of(produto1));
@@ -151,11 +166,27 @@ class ProdutoServiceTest {
 			produtoService.findById(PRODUTO_ID);
 		});
 	}
-	
+
 	@Test
 	public void naoDeveRetornarUmProdutoPeloId() {
 		assertThrows(ProdutoNotFoundException.class, () -> {
 			produtoService.delete(2);
 		});
+	}
+
+	public CategoriaDTO retornaCategoriaDTO() {
+		CategoriaDTO categoriaDTO = new CategoriaDTO();
+		categoriaDTO.setId(CATEGORIA_ID);
+		categoriaDTO.setNome(NOME_CATEGORIA);
+		return categoriaDTO;
+	}
+
+	public ProdutoDTO retornaProdutoDTO() {
+		ProdutoDTO productDTO = new ProdutoDTO();
+		productDTO.setNome(NOME_PRODUTO);
+		productDTO.setDescricao(DESCRICAO);
+		productDTO.setPreco(PRECO_PRODUTO);
+		productDTO.setProdutoIdentifier(IDENTIFICACAO_PRODUTO);
+		return productDTO;
 	}
 }
