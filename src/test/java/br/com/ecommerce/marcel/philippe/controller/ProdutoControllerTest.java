@@ -112,7 +112,7 @@ public class ProdutoControllerTest {
 				.content(this.obterJsonRequisicaoPost())
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
+				.andExpect(status().isCreated())
 				.andExpect(content().string(containsString(Long.toString(PRODUTO_ID))))
 				.andExpect(content().string(containsString(PRODUTO_NOME)))
 				.andExpect(content().string(containsString(PRODUTO_DESCRICAO)))
